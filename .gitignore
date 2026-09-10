@@ -216,3 +216,14 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Docker
+docker-compose.override.yml
+
+# Agents / IDE
+.agents/
+
+# Proje özel
+uploads/
+temp/
+*.log

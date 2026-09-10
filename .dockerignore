@@ -1,0 +1,23 @@
+# Docker build context dışlamaları
+.git
+.gitignore
+.env
+.env.*
+!.env.example
+.venv
+__pycache__
+*.pyc
+*.pyo
+*.egg-info
+dist
+build
+.pytest_cache
+.mypy_cache
+.ruff_cache
+*.md
+!README.md
+*.pdf
+Dockerfile
+docker-compose*.yml
+.agents
+.gemini

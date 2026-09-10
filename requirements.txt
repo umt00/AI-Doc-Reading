@@ -1,0 +1,24 @@
+# ─────────────────────────────────────────────
+# Penta Document Intelligence — Frozen Deps
+# Devir-teslim ve Docker build için
+# ─────────────────────────────────────────────
+
+# Web framework
+fastapi>=0.115.0
+uvicorn[standard]>=0.30.0
+python-multipart>=0.0.9
+
+# Veri doğrulama & konfigürasyon
+pydantic>=2.9.0
+pydantic-settings>=2.5.0
+python-dotenv>=1.0.0
+
+# Azure SDK'lar
+azure-ai-documentintelligence>=1.0.0
+openai>=1.42.0
+
+# Dosya işleme
+pypdf>=4.0.0
+
+# HTTP istemci
+httpx>=0.27.0
