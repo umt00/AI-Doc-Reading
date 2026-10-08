@@ -9,7 +9,6 @@ from __future__ import annotations
 
 from datetime import date
 from decimal import Decimal
-from typing import Optional
 
 from pydantic import BaseModel, Field, field_validator
 
@@ -27,7 +26,7 @@ class FaturaKalemi(BaseModel):
         description="Ürün adedi / miktarı",
         examples=[10],
     )
-    birim: Optional[str] = Field(
+    birim: str | None = Field(
         default=None,
         description="Ölçü birimi (adet, kg, lt, m² vb.)",
         examples=["Adet", "Kg"],
@@ -66,54 +65,54 @@ class FaturaVerisi(BaseModel):
     """Fatura / irsaliye dokümanından ayıklanan tüm veriler."""
 
     # ─── Doküman Tipi ─────────────────────────────────────────
-    dokuman_tipi: Optional[str] = Field(
+    dokuman_tipi: str | None = Field(
         default=None,
         description="Doküman türü (fatura, irsaliye, makbuz vb.)",
         examples=["e-Fatura", "İrsaliye"],
     )
 
     # ─── Temel Bilgiler ───────────────────────────────────────
-    fatura_no: Optional[str] = Field(
+    fatura_no: str | None = Field(
         default=None,
         description="Fatura veya irsaliye numarası",
         examples=["FT2024000123"],
     )
-    tarih: Optional[date] = Field(
+    tarih: date | None = Field(
         default=None,
         description="Düzenleme tarihi (YYYY-MM-DD)",
         examples=["2024-01-15"],
     )
-    vade_tarihi: Optional[date] = Field(
+    vade_tarihi: date | None = Field(
         default=None,
         description="Vade tarihi (YYYY-MM-DD)",
         examples=["2024-02-15"],
     )
 
     # ─── Taraf Bilgileri ──────────────────────────────────────
-    tedarikci_unvan: Optional[str] = Field(
+    tedarikci_unvan: str | None = Field(
         default=None,
         description="Tedarikçi / satıcı firma ünvanı",
     )
-    tedarikci_vkn: Optional[str] = Field(
+    tedarikci_vkn: str | None = Field(
         default=None,
         description="Tedarikçi vergi kimlik numarası (VKN/TCKN)",
         examples=["1234567890"],
     )
-    tedarikci_adres: Optional[str] = Field(
+    tedarikci_adres: str | None = Field(
         default=None,
         description="Tedarikçi adresi",
     )
 
-    alici_unvan: Optional[str] = Field(
+    alici_unvan: str | None = Field(
         default=None,
         description="Alıcı firma ünvanı",
     )
-    alici_vkn: Optional[str] = Field(
+    alici_vkn: str | None = Field(
         default=None,
         description="Alıcı vergi kimlik numarası (VKN/TCKN)",
         examples=["0987654321"],
     )
-    alici_adres: Optional[str] = Field(
+    alici_adres: str | None = Field(
         default=None,
         description="Alıcı adresi",
     )
@@ -125,26 +124,26 @@ class FaturaVerisi(BaseModel):
     )
 
     # ─── Toplamlar ────────────────────────────────────────────
-    ara_toplam: Optional[Decimal] = Field(
+    ara_toplam: Decimal | None = Field(
         default=None,
         description="KDV hariç ara toplam",
     )
-    kdv_toplam: Optional[Decimal] = Field(
+    kdv_toplam: Decimal | None = Field(
         default=None,
         description="Toplam KDV tutarı",
     )
-    genel_toplam: Optional[Decimal] = Field(
+    genel_toplam: Decimal | None = Field(
         default=None,
         description="Genel toplam (KDV dahil)",
     )
 
     # ─── Ek Bilgiler ─────────────────────────────────────────
-    para_birimi: Optional[str] = Field(
+    para_birimi: str | None = Field(
         default="TRY",
         description="Para birimi (ISO 4217)",
         examples=["TRY", "USD", "EUR"],
     )
-    notlar: Optional[str] = Field(
+    notlar: str | None = Field(
         default=None,
         description="Fatura üzerindeki ek notlar veya açıklamalar",
     )

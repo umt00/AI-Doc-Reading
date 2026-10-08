@@ -22,7 +22,9 @@ logger = logging.getLogger(__name__)
 
 # ─── System Prompt ────────────────────────────────────────────
 # Katı kurallarla hallucination önlemi ve deterministik çıktı
-SYSTEM_PROMPT = """Sen Türk fatura, irsaliye ve mali dokümanlardan veri ayıklayan deterministik bir veri çıkarma motorusun.
+SYSTEM_PROMPT = """\
+Sen Türk fatura, irsaliye ve mali dokümanlardan veri ayıklayan deterministik
+bir veri çıkarma motorusun.
 
 ## KESİN KURALLAR:
 1. ASLA varsayımda bulunma. Dokümanda olmayan bilgiyi UYDURMA.
@@ -64,13 +66,15 @@ Yanıtını SADECE aşağıdaki JSON şemasına uygun olarak döndür. Açıklam
   "notlar": "string veya null"
 }"""
 
-USER_PROMPT_TEMPLATE = """Aşağıdaki dokümanın içeriğini analiz et ve tüm fatura/irsaliye verilerini ayıkla.
+USER_PROMPT_TEMPLATE = """\
+Aşağıdaki dokümanın içeriğini analiz et ve tüm fatura/irsaliye verilerini ayıkla.
 
 ## DOKÜMAN İÇERİĞİ:
 {document_content}
 
 ## TALİMAT:
-Yukarıdaki dokümandan tüm verileri ayıklayıp JSON formatında döndür. Bulamadığın alanları null bırak."""
+Yukarıdaki dokümandan tüm verileri ayıklayıp JSON formatında döndür.
+Bulamadığın alanları null bırak."""
 
 
 @dataclass
@@ -100,6 +104,10 @@ class LLMService:
 
     def __init__(self, settings: Settings) -> None:
         self._settings = settings
+        if not settings.azure_openai_endpoint or not settings.azure_openai_api_key:
+            raise ValueError(
+                "Azure OpenAI endpoint ve API anahtarı yapılandırılmamış."
+            )
         self._client = AzureOpenAI(
             azure_endpoint=settings.azure_openai_endpoint,
             api_key=settings.azure_openai_api_key,

@@ -9,14 +9,14 @@ from __future__ import annotations
 
 import logging
 import time
+from collections.abc import AsyncGenerator
 from contextlib import asynccontextmanager
-from typing import AsyncGenerator
 
 from fastapi import FastAPI, File, HTTPException, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
-from src.config import Settings, get_settings
+from src.config import get_settings
 from src.schemas.extraction import FaturaVerisi
 from src.schemas.response import (
     APIResponse,
@@ -60,12 +60,34 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
     logger.info("Penta Document Intelligence başlatılıyor...")
     logger.info("═" * 60)
 
-    # Servisleri başlat
-    _ocr_service = OCRService(settings)
-    _llm_service = LLMService(settings)
+    # Servisleri başlat (kimlik bilgileri eksikse graceful fallback)
+    try:
+        _ocr_service = OCRService(settings)
+    except Exception as e:
+        logger.warning(
+            "OCR Service başlatılamadı (Azure kimlik bilgileri yapılandırılmamış olabilir): %s",
+            e,
+        )
+        _ocr_service = None
+
+    try:
+        _llm_service = LLMService(settings)
+    except Exception as e:
+        logger.warning(
+            "LLM Service başlatılamadı "
+            "(Azure OpenAI kimlik bilgileri yapılandırılmamış olabilir): %s",
+            e,
+        )
+        _llm_service = None
+
     _router_service = RouterService()
 
-    logger.info("Tüm servisler hazır.")
+    if _ocr_service and _llm_service:
+        logger.info("Tüm servisler hazır.")
+    else:
+        logger.warning(
+            "Uygulama eksik Azure konfigürasyonu ile başlatıldı (degraded mod)."
+        )
 
     yield  # Uygulama çalışıyor
 
@@ -80,13 +102,13 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
 
 # ─── FastAPI Uygulaması ───────────────────────────────────────
 app = FastAPI(
-    title="Penta Document Intelligence API",
+    title="AI Document Reading API",
     description=(
-        "Azure AI Document Intelligence ve Azure OpenAI ile "
-        "fatura/irsaliye dokümanlarından otomatik veri ayıklama servisi. "
-        "Train-free / Zero-Shot yaklaşım."
+        "Azure AI Document Intelligence ve Azure OpenAI (GPT-4o) ile "
+        "fatura ve irsaliye dokümanlarından train-free / zero-shot "
+        "akıllı veri çıkarma REST API prototipi."
     ),
-    version="1.0.0",
+    version="0.1.0",
     docs_url="/docs",
     redoc_url="/redoc",
     lifespan=lifespan,
@@ -175,12 +197,13 @@ async def general_exception_handler(
 )
 async def health_check() -> HealthResponse:
     """Servis sağlık durumunu döndürür."""
+    is_ready = bool(_ocr_service and _llm_service and _router_service)
     return HealthResponse(
-        status="healthy",
-        version="1.0.0",
+        status="healthy" if is_ready else "degraded",
+        version="0.1.0",
         services={
-            "ocr_service": "ready" if _ocr_service else "not_initialized",
-            "llm_service": "ready" if _llm_service else "not_initialized",
+            "ocr_service": "ready" if _ocr_service else "not_configured",
+            "llm_service": "ready" if _llm_service else "not_configured",
             "router_service": "ready" if _router_service else "not_initialized",
         },
     )

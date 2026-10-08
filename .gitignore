@@ -223,6 +223,22 @@ docker-compose.override.yml
 # Agents / IDE
 .agents/
 
+# Operating System Files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Sample / uploaded documents (prevent accidental commit of confidential files)
+*.pdf
+*.png
+*.jpg
+*.jpeg
+*.tiff
+*.bmp
 # Proje özel
 uploads/
 temp/

@@ -7,8 +7,8 @@ Generic APIResponse ile tip güvenli wrapper sağlar.
 
 from __future__ import annotations
 
-from datetime import datetime
-from typing import Any, Generic, Optional, TypeVar
+from datetime import UTC, datetime
+from typing import Any, Generic, TypeVar
 
 from pydantic import BaseModel, Field
 
@@ -26,7 +26,7 @@ class ExtractionMetadata(BaseModel):
         ...,
         description="Dosya boyutu (KB)",
     )
-    sayfa_sayisi: Optional[int] = Field(
+    sayfa_sayisi: int | None = Field(
         default=None,
         description="Doküman sayfa sayısı",
     )
@@ -42,12 +42,12 @@ class ExtractionMetadata(BaseModel):
         ...,
         description="Toplam işlem süresi (saniye)",
     )
-    llm_token_kullanimi: Optional[dict[str, int]] = Field(
+    llm_token_kullanimi: dict[str, int] | None = Field(
         default=None,
         description="LLM token kullanım detayları (prompt, completion, total)",
     )
     islem_zamani: datetime = Field(
-        default_factory=datetime.utcnow,
+        default_factory=lambda: datetime.now(UTC),
         description="İşlem zaman damgası (UTC)",
     )
 
@@ -81,7 +81,7 @@ class ErrorDetail(BaseModel):
         ...,
         description="Kullanıcıya yönelik hata mesajı",
     )
-    detail: Optional[str] = Field(
+    detail: str | None = Field(
         default=None,
         description="Teknik hata detayı (debug için)",
     )
@@ -108,7 +108,7 @@ class HealthResponse(BaseModel):
         description="Servis durumu",
     )
     version: str = Field(
-        default="1.0.0",
+        default="0.1.0",
         description="API versiyonu",
     )
     services: dict[str, Any] = Field(

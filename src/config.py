@@ -23,21 +23,21 @@ class Settings(BaseSettings):
 
     # ─── Azure Document Intelligence ──────────────────────────
     azure_document_intelligence_endpoint: str = Field(
-        ...,
+        default="",
         description="Azure Document Intelligence servis endpoint URL'i",
     )
     azure_document_intelligence_key: str = Field(
-        ...,
+        default="",
         description="Azure Document Intelligence API anahtarı",
     )
 
     # ─── Azure OpenAI ─────────────────────────────────────────
     azure_openai_endpoint: str = Field(
-        ...,
+        default="",
         description="Azure OpenAI servis endpoint URL'i",
     )
     azure_openai_api_key: str = Field(
-        ...,
+        default="",
         description="Azure OpenAI API anahtarı",
     )
     azure_openai_deployment_name: str = Field(

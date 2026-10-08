@@ -56,6 +56,13 @@ class OCRService:
 
     def __init__(self, settings: Settings) -> None:
         self._settings = settings
+        if (
+            not settings.azure_document_intelligence_endpoint
+            or not settings.azure_document_intelligence_key
+        ):
+            raise ValueError(
+                "Azure Document Intelligence endpoint ve API anahtarı yapılandırılmamış."
+            )
         self._client = DocumentIntelligenceClient(
             endpoint=settings.azure_document_intelligence_endpoint,
             credential=AzureKeyCredential(settings.azure_document_intelligence_key),

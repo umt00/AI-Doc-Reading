@@ -180,7 +180,10 @@ def _check_pdf_encrypted(content: bytes) -> None:
             if marker in content[:4096]:
                 raise FileValidationError(
                     code="ENCRYPTED_PDF",
-                    message="Şifreli PDF dosyaları işlenemiyor. Lütfen şifresiz bir dosya yükleyin.",
+                    message=(
+                        "Şifreli PDF dosyaları işlenemiyor. "
+                        "Lütfen şifresiz bir dosya yükleyin."
+                    ),
                 )
 
 
